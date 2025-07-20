@@ -26,7 +26,7 @@ export default function handler(request, response) {
             ok: true
         });
     } else {
-        response.setHeader('Allow', ['GET', 'POST']);
+        response.setHeader('Allow', 'GET, POST');
         response.status(405).json({
             message: `${request.method} request received`,
             data: request.query,
