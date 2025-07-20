@@ -12,7 +12,7 @@ export default function handler(request, response) {
 
     // Set CORS headers for all responses
     response.setHeader('Access-Control-Allow-Origin', '*');
-    response.setHeader('Access-Control-Allow-Methods', ['GET', 'POST', 'OPTIONS']);
+    response.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
     response.setHeader('Access-Control-Allow-Headers', 'Content-Type');
 
     if (request.method === 'GET') {
@@ -32,15 +32,10 @@ export default function handler(request, response) {
             ok: true
         });
     } else if (request.method === 'OPTIONS') {
-        response.status(200).json({
-            message: 'OPTIONS request received',
-            data: {},
-            timestamp: new Date(),
-            info: 'OPTIONS requests to this endpoint are ceremonial',
-            ok: true
-        });
+        response.status(204).end();
     } else {
-        response.setHeader('Allow', ['GET', 'POST', 'OPTIONS']);
+        // Note: This code is only reachable for same-origin requests
+        response.setHeader('Allow', 'GET, POST, OPTIONS');
         response.status(405).json({
             message: `${request.method} request received`,
             data: request.query,
