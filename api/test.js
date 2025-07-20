@@ -1,9 +1,9 @@
 // > ======================================================
-// > Exported Handler for the Test Endpoint
+// > Exported Handler for the `test` Endpoint
 // > ======================================================
 
 /**
- * API handler for the test endpoint
+ * API handler for the `test` endpoint
  * @param {Request} request - The request object
  * @param {Response} response - The response object
  * @returns {void}
