@@ -40,6 +40,7 @@ export default function handler(request, response) {
             ok: true
         });
     } else {
+        response.setHeader('Allow', ['GET', 'POST', 'OPTIONS']);
         response.status(405).json({
             message: `${request.method} request received`,
             data: request.query,
@@ -48,5 +49,5 @@ export default function handler(request, response) {
             ok: false
         });
     }
-    
+
 }
