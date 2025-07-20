@@ -28,7 +28,34 @@
 
     <div id="main">
 
-      <!-- * Note: HTML structure may be altered by JavaScript -->
+      <label>
+        <input type="checkbox" id="origin-toggle" />
+        Cross-origin
+      </label>
+
+      <div class="request-tester">
+        <div class="request-button">GET</div>
+        <div class="request-info">Should work same-origin and cross-origin</div>
+        <div class="response-container"></div>
+      </div>
+
+      <div class="request-tester">
+        <div class="request-button">POST</div>
+        <div class="request-info">Should work same-origin and cross-origin</div>
+        <div class="response-container"></div>
+      </div>
+
+      <div class="request-tester">
+        <div class="request-button">OPTIONS</div>
+        <div class="request-info">Should work same-origin and cross-origin</div>
+        <div class="response-container"></div>
+      </div>
+
+      <div class="request-tester">
+        <div class="request-button">DELETE</div>
+        <div class="request-info">Should work same-origin and fail cross-origin</div>
+        <div class="response-container"></div>
+      </div>
 
     </div>
 
