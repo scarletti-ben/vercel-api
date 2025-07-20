@@ -32,13 +32,15 @@ export default async function handler(request, response) {
                 });
                 return;
             }
-            const targetResponse = await fetch(targetURL);
+            const targetResponse = await fetch(targetURL, {
+                headers: { 'User-Agent': 'Mozilla/5.0' }
+            });
             const targetStatus = targetResponse.status;
             const contentType = targetResponse.headers.get('content-type') || '';
             if (contentType.includes('application/json')) {
                 const data = await targetResponse.json();
                 response.status(200).json({
-                    message: `GET request proxied`,
+                    message: `GET request proxied (JSON)`,
                     proxyStatus: targetStatus,
                     data,
                     ok: true
@@ -46,7 +48,7 @@ export default async function handler(request, response) {
             } else {
                 const text = await targetResponse.text();
                 response.status(200).json({
-                    message: `GET request proxied`,
+                    message: `GET request proxied (text)`,
                     proxyStatus: targetStatus,
                     data: { text },
                     ok: true
