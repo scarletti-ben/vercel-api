@@ -35,7 +35,7 @@ export default async function handler(request, response) {
             // const targetResponse = await fetch(targetURL, {
             //     headers: { 'User-Agent': 'Mozilla/5.0' }
             // });
-            const targetResponse = await fetch('https://api.reddit.com/r/cats?limit=1', {
+            const targetResponse = await fetch('https://api.reddit.com/r/cats.json?limit=1', {
                 headers: { 'User-Agent': 'Mozilla/5.0' }
             });
             const targetStatus = targetResponse.status;
