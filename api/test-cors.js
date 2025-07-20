@@ -34,7 +34,7 @@ export default function handler(request, response) {
     } else if (request.method === 'OPTIONS') {
         response.status(204).end();
     } else {
-        // Note: This code is only reachable for same-origin requests
+        // * Due to headers, this code is only reachable for same-origin requests
         response.setHeader('Allow', 'GET, POST, OPTIONS');
         response.status(405).json({
             message: `${request.method} request received`,
