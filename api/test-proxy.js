@@ -36,7 +36,7 @@ export default async function handler(request, response) {
             //     headers: { 'User-Agent': 'Mozilla/5.0' }
             // });
             const targetResponse = await fetch('https://api.reddit.com/r/cats.json?limit=1', {
-                headers: { 'User-Agent': 'Mozilla/5.0' }
+                headers: { 'User-Agent': 'BenTestProxy/1.0.1 (notspam95@gmail.com)' }
             });
             const targetStatus = targetResponse.status;
             const contentType = targetResponse.headers.get('content-type') || '';
