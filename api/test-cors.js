@@ -9,6 +9,12 @@
  * @returns {void}
  */
 export default function handler(request, response) {
+
+    // Set CORS headers for all responses
+    response.setHeader('Access-Control-Allow-Origin', '*');
+    response.setHeader('Access-Control-Allow-Methods', ['GET', 'POST', 'OPTIONS']);
+    response.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+
     if (request.method === 'GET') {
         response.status(200).json({
             message: 'GET request received',
@@ -26,9 +32,6 @@ export default function handler(request, response) {
             ok: true
         });
     } else if (request.method === 'OPTIONS') {
-        response.setHeader('Access-Control-Allow-Origin', '*');
-        response.setHeader('Access-Control-Allow-Methods', ['GET', 'POST', 'OPTIONS']);
-        response.setHeader('Access-Control-Allow-Headers', 'Content-Type');
         response.status(200).json({
             message: 'OPTIONS request received',
             data: {},
@@ -37,8 +40,6 @@ export default function handler(request, response) {
             ok: true
         });
     } else {
-        response.setHeader('Access-Control-Allow-Origin', '*');
-        response.setHeader('Allow', ['GET', 'POST', 'OPTIONS']);
         response.status(405).json({
             message: `${request.method} request received`,
             data: request.query,
@@ -47,4 +48,5 @@ export default function handler(request, response) {
             ok: false
         });
     }
+    
 }
