@@ -15,10 +15,10 @@ const originToggle = /** @type {HTMLInputElement} */
 // < Declarations
 // < ======================================================
 
-const SAME_ORIGIN_URL = 
+const RELATIVE_URL = 
     '/api/test-cors';
 
-const CROSS_ORIGIN_URL = 
+const FULL_URL = 
     'https://vercel-cors-proxy-eight.vercel.app/api/test-cors';
 
 // ~ ======================================================
@@ -39,7 +39,7 @@ const CROSS_ORIGIN_URL =
         button.addEventListener('click', async () => {
             const method = button.textContent.trim();
             try {
-                const path = originToggle.checked ?  CROSS_ORIGIN_URL : SAME_ORIGIN_URL;
+                const path = originToggle.checked ?  RELATIVE_URL : FULL_URL;
                 const response = await fetch(path, { method });
                 const responseText = await response.text();
                 let data;
