@@ -175,7 +175,7 @@ function handleOptions(request, response) {
 async function handleGet(request, response) {
 
     // ~ Validate the required query parameters
-    if (!request.query.plain && !request.query.encoded) {
+    if (!request.query.encrypt && !request.query.decrypt) {
         return response.status(400).json({
             ok: false,
             status: 400,
@@ -184,7 +184,7 @@ async function handleGet(request, response) {
             error: {
                 code: 400,
                 message: "Missing required parameter",
-                details: "Missing 'plain' or 'encrypted' parameter",
+                details: "Missing 'encrypt' or 'decrypt' parameter",
             },
             timestamp: new Date().toISOString()
         });
@@ -193,11 +193,12 @@ async function handleGet(request, response) {
     try {
 
         // ~ Handle encrypting plain text
-        if (request.query.plain) {
+        if (request.query.encrypt) {
 
             // ~ Encrypt the provided text
+            const originalText = request.query.encrypt;
             const publicKey = await importKey(process.env.PUBLIC_KEY, "public");
-            const encryptedBase64 = await rsaEncrypt(TEXT, publicKey);
+            const encryptedBase64 = await rsaEncrypt(originalText, publicKey);
             const encodedBase64 = encodeURIComponent(encryptedBase64);
 
             // ~ Return successful response
@@ -222,14 +223,14 @@ async function handleGet(request, response) {
         const encodedBase64 = request.query.text;
         const encryptedBase64 = decodeURIComponent(encodedBase64);
         const privateKey = await importKey(process.env.PRIVATE_KEY, "private");
-        const decryptedBase64 = await rsaDecrypt(encryptedBase64, privateKey);
+        const originalText = await rsaDecrypt(encryptedBase64, privateKey);
 
         // ~ Return successful response
         return response.status(200).json({
             ok: true,
             status: 200,
             data: {
-                text: decryptedBase64
+                text: originalText
             },
             info: {
                 code: 200,
