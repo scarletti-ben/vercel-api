@@ -19,7 +19,7 @@ export default function handler(request, response) {
     response.setHeader('Access-Control-Allow-Origin', '*');
     response.setHeader('Access-Control-Allow-Methods', allowedMethods);
     response.setHeader('Access-Control-Allow-Headers', 'Content-Type');
-    
+
     // ! Note: Cross-origin requests often send OPTIONS preflight
     // - Browser checks if method in allowedMethods
     // - Usually the main request is only sent if OPTIONS allows it
@@ -33,27 +33,33 @@ export default function handler(request, response) {
     // Handle a GET request
     if (request.method === 'GET') {
         response.status(200).json({
-            message: 'GET request received',
-            data: request.query,
-            timestamp: new Date(),
-            info: `GET requests to this endpoint are for testing`,
-            ok: true
+            ok: true,
+            data: {
+                code: 200,
+                message: "GET request received",
+                details: `GET requests to this endpoint are allowed`,
+                timestamp: new Date().toISOString()
+            },
+            error: null,
         });
         return;
     }
-    
+
     // ! Note: This should not be reached when cross-origin
     // - The OPTIONS preflight check should block it
-    // - Direct requests may avoid OPTIONS and reach here
+    // - Direct requests may avoid OPTIONS and reach it
 
-    // Handle all other requests with not implemented error
+    // Handle all other requests with not allowed error
     response.setHeader('Allow', allowedMethods);
-    response.status(501).json({
-        message: `${request.method} request received`,
-        data: request.query,
-        timestamp: new Date(),
-        info: `${request.method} functionality not implemented`,
-        ok: false
+    response.status(405).json({
+        ok: false,
+        data: null,
+        error: {
+            code: 405,
+            message: "Method not allowed",
+            details: `${request.method} functionality not allowed`,
+            timestamp: new Date().toISOString()
+        }
     });
     return;
 
