@@ -1,39 +1,79 @@
 // < ======================================================
+// < Internal Base64 Conversion Functions
+// < ======================================================
+
+/**
+ * Convert an ArrayBuffer to a Base64-encoded string
+ * 
+ * @param {ArrayBuffer} buffer - The binary data to encode
+ * @returns {string} The Base64 string
+ */
+function toBase64(buffer) {
+    const bytes = new Uint8Array(buffer);
+    let binary = '';
+    for (let i = 0; i < bytes.length; i++) {
+        binary += String.fromCharCode(bytes[i]);
+    }
+    return btoa(binary);
+}
+
+function fromBase64(base64) {
+    const binaryString = atob(base64);
+    const bytes = new Uint8Array(binaryString.length);
+    for (let i = 0; i < binaryString.length; i++) {
+        bytes[i] = binaryString.charCodeAt(i);
+    }
+    return bytes;
+}
+// < ======================================================
 // < Internal Import Private Key Function
 // < ======================================================
 
-async function importPrivateKey(pem) {
-    const binaryDer = Uint8Array.from(atob(pem), c => c.charCodeAt(0));
-    return crypto.subtle.importKey(
-        "pkcs8",
-        binaryDer.buffer,
+async function importKey(base64, type) {
+
+    const binary = fromBase64(base64);
+
+    return await crypto.subtle.importKey(
+        type === "public" ? "spki" : "pkcs8",
+        binary.buffer,
         {
             name: "RSA-OAEP",
             hash: "SHA-256"
         },
         false,
-        ["decrypt"]
+        [type === "public" ? "encrypt" : "decrypt"]
     );
+
+}
+
+// Decrypt RSA-OAEP encrypted data
+async function rsaDecrypt(encryptedBase64, privateKey) {
+
+    encryptedArray = fromBase64(encryptedBase64);
+
+    const decryptedBuffer = await crypto.subtle.decrypt(
+        { name: "RSA-OAEP" },
+        privateKey,
+        encryptedArray.buffer
+    );
+
+    return new TextDecoder().decode(decryptedBuffer);
 }
 
 // < ======================================================
 // < Internal Magic Function
 // < ======================================================
 
-async function magic(text) {
-    const privateKey = await importPrivateKey(process.env.PRIVATE_KEY);
-    const ciphertext = Uint8Array.from(atob(text), c => c.charCodeAt(0));
-    const decrypted = await crypto.subtle.decrypt({ name: "RSA-OAEP" }, privateKey, ciphertext);
-    const decoded = new TextDecoder().decode(decrypted);
-    return decoded
+async function magic(encryptedData) {
+    return await rsaDecrypt(encryptedData, privateKey);
 }
 
 // > ======================================================
-// > Exported Handler for the `test-key` Endpoint
+// > Exported Handler for the `test-rsa-oaep` Endpoint
 // > ======================================================
 
 /**
- * API handler for the `test-key` endpoint
+ * API handler for the `test-rsa-oaep` endpoint
  * - Runs in a Node.js environment
  * - Request and Response types from Next.js
  * 
@@ -84,8 +124,13 @@ export default async function handler(request, response) {
         }
 
         // ~ Do magic
+
+        let outputText = '';
         try {
-            const decoded = await magic(request.query.text);
+
+            const privateKey = await importKey(process.env.PRIVATE_KEY, "private");
+            outputText = await rsaDecrypt(encryptedData, privateKey);
+
         } catch (error) {
             return response.status(500).json({
                 ok: false,
@@ -107,11 +152,11 @@ export default async function handler(request, response) {
             ok: true,
             status: 200,
             data: {
-                text: decoded
+                text: outputText
             },
             info: {
                 code: 200,
-                message: "Text successfully decoded",
+                message: "Text successfully decrypted",
                 details: `response.data.text accessible`,
             },
             error: null,
