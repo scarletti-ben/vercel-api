@@ -18,6 +18,7 @@ The `serverless` function for each `API` endpoint should be accessible via a lin
 - A `GET` request or direct access to https://scarletti-ben.vercel.app/api/test should succeed
 
 ### [api/test-proxy](https://scarletti-ben.vercel.app/api/test-proxy)
+- A `GET` request or direct access to https://scarletti-ben.vercel.app/api/test-proxy should fail as the `?url=` parameter is missing
 - A `GET` request or direct access to https://scarletti-ben.vercel.app/api/test-proxy?url=https://api.dictionaryapi.dev/api/v2/entries/en/hello should succeed with a `JSON` object as the data field
 - A `GET` request or direct access to https://scarletti-ben.vercel.app/api/test-proxy?url=https://www.example.com should fail as the content type returned is `text/html`
 - A `GET` request or direct access to https://scarletti-ben.vercel.app/api/test-proxy?url=https://www.reddit.com should fail as `Reddit` does not honour the request
