@@ -1,31 +1,29 @@
 # Vercel API
 The primary aim for this project is to have a set of low-maintenance `API` endpoints that are accessible via simple `HTTP` requests eg. `GET` and `POST`. This is achieved via `Vercel` as it allows you to make use of free `serverless` functions in your project's `api/` directory. Some effort has been made to ensure that the `API` is consistent, and that the `HTTP` requests get a coherent response in every scenario.
 
-The main site can be found [here](https://scarletti-ben.vercel.app), it is currently a work in progress, with the `API` itself being the main focus.
+The main site can be found [here](https://scarletti-ben.vercel.app), it is currently a work in progress, with the `API` itself being the main focus
 
 > [!NOTE]
 > This repository is hosted on `GitHub`, and linked to `Vercel`. `Vercel` listens for any pushes to the `main` branch which will automatically trigger a new `build` and `deploy` process
 
 # Current API Endpoints
-The `serverless` function for each `API` endpoint should be accessible via a link in the format `https://app-name.vercel.app/api/endpoint-name`.
+The `serverless` function for each `API` endpoint should be accessible via a link in the format `https://app-name.vercel.app/api/endpoint-name`
 
 > [!TIP]
 > You can test `API` endpoints using the `API` tester [ReqBin](https://reqbin.com/)
 
 ## Current API Endpoints
 
-### api/test
-Accessible via this [link](https://scarletti-ben.vercel.app/api/test)
-- A `GET` request or direct access to `https://scarletti-ben.vercel.app/api/test` should succeed
+### [api/test](https://scarletti-ben.vercel.app/api/test)
+- A `GET` request or direct access to https://scarletti-ben.vercel.app/api/test should succeed
 
-### api/test-proxy
-Accessible via this [link](https://scarletti-ben.vercel.app/api/test)
-- A `GET` request or direct access to `https://scarletti-ben.vercel.app/api/test-proxy?url=https://api.dictionaryapi.dev/api/v2/entries/en/hello` should succeed with a `JSON` object as the data field
-- A `GET` request or direct access to `https://scarletti-ben.vercel.app/api/test-proxy?url=https://www.example.com` should fail as the content type returned is `text/html`
-- A `GET` request or direct access to `https://scarletti-ben.vercel.app/api/test-proxy?url=https://www.reddit.com` should fail as `Reddit` does not honour the request
+### [api/test-proxy](https://scarletti-ben.vercel.app/api/test-proxy)
+- A `GET` request or direct access to https://scarletti-ben.vercel.app/api/test-proxy?url=https://api.dictionaryapi.dev/api/v2/entries/en/hello should succeed with a `JSON` object as the data field
+- A `GET` request or direct access to https://scarletti-ben.vercel.app/api/test-proxy?url=https://www.example.com should fail as the content type returned is `text/html`
+- A `GET` request or direct access to https://scarletti-ben.vercel.app/api/test-proxy?url=https://www.reddit.com should fail as `Reddit` does not honour the request
 
 ## Adding a New API Endpoint
-It is incredibly easy to add a new `serverless` function / `API` endpoint to `Vercel`. To do so, create a new `.js` file in the `api/` directory, inside the `.js` file add a function in the format `export default function handler(request, response)`. Once completed, push the change to the `main` branch. `Vercel` will start a `build` and `deploy` process, with the new endpoint accessible at `https://app-name.vercel.app/api/endpoint-name`
+It is incredibly easy to add a new `serverless` function / `API` endpoint to `Vercel`. To do so, create a new `.js` file in the `api/` directory and write a function in the format `export default function handler(request, response)`. Once completed, push the change to the `main` branch. `Vercel` will start a `build` and `deploy` process, with the new endpoint accessible at `https://app-name.vercel.app/api/endpoint-name`
 
 An incredibly simple example of a `handler` function can be found below. There is no perfect `handler` function, it can be as complex or simple as you want, this example is using a response object style I have been using recently
 ```javascript
