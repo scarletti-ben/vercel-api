@@ -48,11 +48,12 @@ export default function handler(request, response) {
     // Handle all other requests with not implemented error
     response.setHeader('Allow', allowedMethods);
     response.status(501).json({
-        message: `${request.method} request received`,
+        message: `${request.method} request received - TEST STRING`,
         data: request.query,
         timestamp: new Date(),
         info: `${request.method} functionality not implemented`,
         ok: false
     });
+    return;
 
 }
