@@ -29,29 +29,13 @@ const ALLOWED_HEADERS = "Content-Type";
 // < ======================================================
 
 /**
- * Convert an ArrayBuffer to a Base64-encoded string
- * 
- * @param {ArrayBuffer} buffer - The binary data to encode
- * @returns {string} The Base64-encoded string representation
- * @throws {TypeError} If buffer is not an ArrayBuffer
- */
-function toBase64(buffer) {
-    const bytes = new Uint8Array(buffer);
-    let binary = '';
-    for (let i = 0; i < bytes.length; i++) {
-        binary += String.fromCharCode(bytes[i]);
-    }
-    return btoa(binary);
-}
-
-/**
  * Convert a Base64-encoded string to a Uint8Array
  * 
  * @param {string} base64 - The Base64-encoded string to decode
  * @returns {Uint8Array} The decoded binary data as a Uint8Array
- * @throws {DOMException} If base64 string is invalid
+ * @throws {DOMException} If Base64 string is invalid
  */
-function __fromBase64(base64) {
+function fromBase64(base64) {
     const binaryString = atob(base64);
     const bytes = new Uint8Array(binaryString.length);
     for (let i = 0; i < binaryString.length; i++) {
@@ -61,23 +45,19 @@ function __fromBase64(base64) {
 }
 
 /**
- * Convert a Base64-encoded string to a Uint8Array
+ * Convert ArrayBuffer string to Base64
  * 
- * @param {string} base64 - The Base64-encoded string to decode
- * @returns {Uint8Array} The decoded binary data as a Uint8Array
- * @throws {Error} If base64 string is invalid
+ * @param {ArrayBuffer} buffer - The ArrayBuffer to encode
+ * @returns {string} The Base64-encoded string
+ * @throws {DOMException} If any invalid characters found
  */
-function fromBase64(base64) {
-    try {
-        const binaryString = atob(base64);
-        const bytes = new Uint8Array(binaryString.length);
-        for (let i = 0; i < binaryString.length; i++) {
-            bytes[i] = binaryString.charCodeAt(i);
-        }
-        return bytes;
-    } catch (error) {
-        throw new DOMException(`Base64 decode failed: ${error.message}`, 'InvalidCharacterError');
+function toBase64(buffer) {
+    const bytes = new Uint8Array(buffer);
+    let binary = '';
+    for (let i = 0; i < bytes.length; i++) {
+        binary += String.fromCharCode(bytes[i]);
     }
+    return btoa(binary);
 }
 
 // < ======================================================
@@ -105,6 +85,25 @@ async function importKey(base64, type) {
         false,
         [type === "public" ? "encrypt" : "decrypt"]
     );
+}
+
+/**
+ * Encrypt text usingpublic key
+ * 
+ * @async
+ * @param {string} text - Plain text to encrypt
+ * @param {CryptoKey} publicKey - The public key for encryption
+ * @returns {Promise<string>} Base64-encoded encrypted data
+ */
+async function rsaEncrypt(text, publicKey) {
+    const encoder = new TextEncoder();
+    const data = encoder.encode(text);
+    const encryptedBuffer = await crypto.subtle.encrypt(
+        { name: "RSA-OAEP" },
+        publicKey,
+        data
+    );
+    return toBase64(encryptedBuffer);
 }
 
 /**
@@ -171,12 +170,12 @@ function handleOptions(request, response) {
  * @async
  * @param {Request} request - Next.js request object
  * @param {Response} response - Next.js response object
- * @returns {Promise<Response>} response - Response with decrypted text or error
+ * @returns {Promise<Response>} response - Response with text or error
  */
 async function handleGet(request, response) {
 
     // ~ Validate the required query parameters
-    if (!request.query.text) {
+    if (!request.query.plain && !request.query.encoded) {
         return response.status(400).json({
             ok: false,
             status: 400,
@@ -185,7 +184,7 @@ async function handleGet(request, response) {
             error: {
                 code: 400,
                 message: "Missing required parameter",
-                details: "Missing 'text' parameter: ?text=<encrypted_data>",
+                details: "Missing 'plain' or 'encrypted' parameter",
             },
             timestamp: new Date().toISOString()
         });
@@ -193,22 +192,49 @@ async function handleGet(request, response) {
 
     try {
 
-        // ~ Decode and decrypt the provided text
-        const encryptedBase64 = decodeURIComponent(request.query.text);
+        // ~ Handle encrypting plain text
+        if (request.query.plain) {
+
+            // ~ Encrypt the provided text
+            const publicKey = await importKey(process.env.PUBLIC_KEY, "public");
+            const encryptedBase64 = await rsaEncrypt(TEXT, publicKey);
+            const encodedBase64 = encodeURIComponent(encryptedBase64);
+
+            // ~ Return successful response
+            return response.status(200).json({
+                ok: true,
+                status: 200,
+                data: {
+                    text: encodedBase64
+                },
+                info: {
+                    code: 200,
+                    message: "Text successfully encrypted",
+                    details: "Encrypted text available at response.data.text",
+                },
+                error: null,
+                timestamp: new Date().toISOString()
+            });
+
+        }
+
+        // ~ Decrypt the provided text
+        const encodedBase64 = request.query.text;
+        const encryptedBase64 = decodeURIComponent(encodedBase64);
         const privateKey = await importKey(process.env.PRIVATE_KEY, "private");
-        const decryptedText = await rsaDecrypt(encryptedBase64, privateKey);
+        const decryptedBase64 = await rsaDecrypt(encryptedBase64, privateKey);
 
         // ~ Return successful response
         return response.status(200).json({
             ok: true,
             status: 200,
             data: {
-                decryptedText
+                text: decryptedBase64
             },
             info: {
                 code: 200,
                 message: "Text successfully decrypted",
-                details: "Decrypted text available in response.data.decryptedText",
+                details: "Decrypted text available at response.data.text",
             },
             error: null,
             timestamp: new Date().toISOString()
@@ -226,8 +252,7 @@ async function handleGet(request, response) {
                 code: 500,
                 name: error.name,
                 message: error.message,
-                details: 'Failed to process the provided text',
-                note: 'Ensure text is URI-safe Base64 string from RSA-OAEP'
+                details: 'Failed to process the provided text'
             },
             timestamp: new Date().toISOString()
         });
