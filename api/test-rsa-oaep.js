@@ -68,42 +68,15 @@ function __fromBase64(base64) {
  * @throws {Error} If base64 string is invalid
  */
 function fromBase64(base64) {
-
     try {
-
-        // Clean the Base64 string
-        let cleanBase64 = base64
-            .replace(/\s/g, '')  // Remove whitespace
-            .replace(/-/g, '+')  // Convert URL-safe Base64 chars
-            .replace(/_/g, '/'); // Convert URL-safe Base64 chars
-
-        // Add padding if needed
-        while (cleanBase64.length % 4) {
-            cleanBase64 += '=';
-        }
-
-        // Validate Base64 format
-        if (!/^[A-Za-z0-9+/]*={0,2}$/.test(cleanBase64)) {
-            throw new Error(`Invalid Base64 characters found in: ${cleanBase64.substring(0, 50)}...`);
-        }
-
-        // Convert to Uint8Array
-        const binaryString = atob(cleanBase64);
+        const binaryString = atob(base64);
         const bytes = new Uint8Array(binaryString.length);
         for (let i = 0; i < binaryString.length; i++) {
             bytes[i] = binaryString.charCodeAt(i);
         }
         return bytes;
-
     } catch (error) {
-
-        // Detailed error for debugging
-        console.error('Base64 decode error:', {
-            originalInput: base64.substring(0, 100),
-            error: error.message
-        });
-        throw new Error(`Base64 decode failed: ${error.message}`);
-
+        throw new DOMException(`Base64 decode failed: ${error.message}`, 'InvalidCharacterError');
     }
 }
 
