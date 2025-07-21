@@ -128,8 +128,9 @@ export default async function handler(request, response) {
         let outputText = '';
         try {
 
+            const encryptedBase64 = decodeURIComponent(request.query.text);
             const privateKey = await importKey(process.env.PRIVATE_KEY, "private");
-            outputText = await rsaDecrypt(request.query.text, privateKey);
+            outputText = await rsaDecrypt(encryptedBase64, privateKey);
 
         } catch (error) {
             return response.status(500).json({
