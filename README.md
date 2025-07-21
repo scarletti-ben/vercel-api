@@ -1,5 +1,5 @@
 # Vercel API
-The primary aim for this project is to have a set of low-maintenance `API` endpoints that are accessible via simple `HTTP` requests eg. `GET` and `POST`. This is achieved via `Vercel` as it allows you to make use of free `serverless` functions in your project's `api/` directory. Some effort has been made to ensure that the `API` is consistent, and that the `HTTP` requests get a coherent response in every scenario.
+The primary aim for this project is to have a set of low-maintenance `API` endpoints / `serverless` functions that are accessible via simple `HTTP` requests eg. `GET` and `POST`. This is achieved via `Vercel` as it allows you to make use of these free `serverless` functions in your project's `api/` directory. Some effort has been made to ensure that the `API` is consistent, and that the `HTTP` requests get a coherent response in every scenario.
 
 The main site can be found [here](https://scarletti-ben.vercel.app), it is currently a work in progress, with the `API` itself being the main focus
 
