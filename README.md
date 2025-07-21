@@ -10,7 +10,7 @@ This `README` is a work in progress.
 - To add a serverless function, simply add a `/api` folder to your repository with endpoints being `JavaScript` files, eg. `endpoint-name.js` would be accessible via `https://app-name.vercel.app/api/endpoint-name`
 
 # What is CORS?
-That is such a good question, Ben.
+That is such a good question, Ben!
 
 # Project Metadata
 ```yaml
