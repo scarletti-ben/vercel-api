@@ -39,7 +39,7 @@ export default function handler(request, response) {
                 data: {
                     code: 200,
                     message: "GET request received",
-                    details: `url: ${response.query.url}`,
+                    details: `url: ${request.query.url}`,
                     timestamp: new Date().toISOString()
                 },
                 error: null,

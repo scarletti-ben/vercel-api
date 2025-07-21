@@ -1,6 +1,14 @@
 # Vercel CORS Proxy
 This `README` is a work in progress.
 
+When you add the `api/` directory to your project, you can now add `serverless` functions to that directory, which will automatically be picked up by `Vercel` and served at `https://app-name.vercel.app/api/endpoint-name`.
+
+`https://scarletti-ben.vercel.app/api/test`
+
+`https://reqbin.com/` for testing API
+
+`tryit.asp:1 Access to fetch at 'https://scarletti-ben.vercel.app/api/test' from origin 'https://www.w3schools.com' has been blocked by CORS policy: Method DELETE is not allowed by Access-Control-Allow-Methods in preflight response.`
+
 # Vercel
 - Visit [Vercel](https://vercel.com/), sign up and give a name, then authenticate via `GitHub`
   - No need for a username and password

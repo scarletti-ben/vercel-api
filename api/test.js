@@ -57,7 +57,7 @@ export default function handler(request, response) {
         error: {
             code: 405,
             message: "Method not allowed",
-            details: `${request.method} functionality not allowed`,
+            details: `${request.method} method not allowed`,
             timestamp: new Date().toISOString()
         }
     });
