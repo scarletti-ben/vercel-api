@@ -10,10 +10,17 @@
  */
 export default function handler(request, response) {
 
+    // Allowed methods used for CORS and "Allow" header
+    const allowedMethods = 'GET, OPTIONS';
+
     // Set CORS headers to allow cross-origin requests
     response.setHeader('Access-Control-Allow-Origin', '*');
-    response.setHeader('Access-Control-Allow-Methods', '*');
+    response.setHeader('Access-Control-Allow-Methods', allowedMethods);
     response.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+    
+    // ! Note: Cross-origin requests often send OPTIONS preflight
+    // - Browser checks if method in allowedMethods
+    // - Usually the main request is only sent if OPTIONS allows it
 
     // Handle an OPTIONS request (CORS preflight request)
     if (request.method === 'OPTIONS') {
@@ -32,9 +39,12 @@ export default function handler(request, response) {
         });
         return;
     }
-
+    
+    // ! Note: This will not be reached when cross-origin
+    // - The OPTIONS preflight check should block it
+    
     // Handle all other requests with not implemented error
-    response.setHeader('Allow', 'GET, OPTIONS');
+    response.setHeader('Allow', allowedMethods);
     response.status(501).json({
         message: `${request.method} request received`,
         data: request.query,
