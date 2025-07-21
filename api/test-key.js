@@ -16,6 +16,18 @@ async function importPrivateKey(pem) {
     );
 }
 
+// < ======================================================
+// < Internal Magic Function
+// < ======================================================
+
+async function magic(text) {
+    const privateKey = await importPrivateKey(process.env.PRIVATE_KEY);
+    const ciphertext = Uint8Array.from(atob(text), c => c.charCodeAt(0));
+    const decrypted = await crypto.subtle.decrypt({ name: "RSA-OAEP" }, privateKey, ciphertext);
+    const decoded = new TextDecoder().decode(decrypted);
+    return decoded
+}
+
 // > ======================================================
 // > Exported Handler for the `test-key` Endpoint
 // > ======================================================
@@ -72,11 +84,24 @@ export default async function handler(request, response) {
         }
 
         // ~ Do magic
-        const privateKey = await importPrivateKey(process.env.PRIVATE_KEY);
-        const ciphertext = Uint8Array.from(atob(text), c => c.charCodeAt(0));
-        const decrypted = await crypto.subtle.decrypt({ name: "RSA-OAEP" }, privateKey, ciphertext);
-        const decoded = new TextDecoder().decode(decrypted);
-        
+        try {
+            const decoded = await magic(request.query.text);
+        } catch (error) {
+            return response.status(500).json({
+                ok: false,
+                status: 500,
+                data: null,
+                info: null,
+                error: {
+                    code: 500,
+                    name: error.name,
+                    message: error.message,
+                    details: 'Unexpected error doing magic'
+                },
+                timestamp: new Date().toISOString()
+            })
+        }
+
         // ~ Handle a GET request with success response
         return response.status(200).json({
             ok: true,
