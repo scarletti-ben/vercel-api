@@ -129,7 +129,7 @@ export default async function handler(request, response) {
         try {
 
             const privateKey = await importKey(process.env.PRIVATE_KEY, "private");
-            outputText = await rsaDecrypt(encryptedData, privateKey);
+            outputText = await rsaDecrypt(request.query.text, privateKey);
 
         } catch (error) {
             return response.status(500).json({
