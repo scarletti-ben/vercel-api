@@ -4,7 +4,7 @@
 
 /**
  * Make a safe fetch request to an external URL
- * - Returns an object for use as API response
+ * - Return an object for use as API response
  * 
  * @async 
  * @param {string} url - The target URL to fetch from
@@ -108,9 +108,9 @@ async function proxyFetch(url) {
 // > ======================================================
 
 /**
- * API handler for the `test-parameters` endpoint
+ * API handler for the `test-proxy` endpoint
  * - Runs in a Node.js environment
- * - Request and Response will actually be Next.js types
+ * - Request and Response types from Next.js
  * 
  * @async
  * @param {Request} request - Next.js request object
@@ -142,14 +142,15 @@ export default async function handler(request, response) {
     // ~ Handle a GET request
     if (request.method === 'GET') {
 
-        // Make a proxyFetch request if `url` parameter found
+        // ~ Make a proxyFetch request if `url` parameter found
         if (request.query.url) {
             const fetchResponse = await proxyFetch(request.query.url);
             const fetchStatus = fetchResponse.status;
+            // ~ Success or error response dependent on proxyFetch
             return response.status(fetchStatus).json(fetchResponse);
         }
 
-        // Error response if 'url' parameter missing
+        // ~ Error response if 'url' parameter missing
         return response.status(400).json({
             ok: false,
             status: 400,

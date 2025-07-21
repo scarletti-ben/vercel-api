@@ -36,9 +36,9 @@ An incredibly simple example of a `handler` function can be found below. There i
  * @returns {void}
  */
 export default function handler(request, response) {
-    // Handle a GET request
+    // Handle a GET request with success response
     if (request.method === 'GET') {
-        response.status(200).json({
+        return response.status(200).json({
             ok: true,
             status: 200,
             data: null,
@@ -50,7 +50,6 @@ export default function handler(request, response) {
             error: null,
             timestamp: new Date().toISOString()
         });
-        return;
     }
 }
 ```
