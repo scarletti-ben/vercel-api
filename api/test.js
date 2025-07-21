@@ -42,13 +42,14 @@ export default function handler(request, response) {
         return;
     }
     
-    // ! Note: This will not be reached when cross-origin
+    // ! Note: This should not be reached when cross-origin
     // - The OPTIONS preflight check should block it
+    // - Direct requests may avoid OPTIONS and reach here
 
     // Handle all other requests with not implemented error
     response.setHeader('Allow', allowedMethods);
     response.status(501).json({
-        message: `${request.method} request received - TEST STRING`,
+        message: `${request.method} request received`,
         data: request.query,
         timestamp: new Date(),
         info: `${request.method} functionality not implemented`,
