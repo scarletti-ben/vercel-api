@@ -49,7 +49,7 @@ async function importKey(base64, type) {
 // Decrypt RSA-OAEP encrypted data
 async function rsaDecrypt(encryptedBase64, privateKey) {
 
-    encryptedArray = fromBase64(encryptedBase64);
+    const encryptedArray = fromBase64(encryptedBase64);
 
     const decryptedBuffer = await crypto.subtle.decrypt(
         { name: "RSA-OAEP" },
