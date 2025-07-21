@@ -14,6 +14,9 @@ The `serverless` function for each `API` endpoint should be accessible via a lin
 
 ## Current API Endpoints
 
+> [!Tip]
+> Sometimes clicking a link can affect the characters in the URL slightly, consider copy and pasting the URL if you encounter issues
+
 ### [api/test](https://scarletti-ben.vercel.app/api/test)
 - A `GET` request or direct access to https://scarletti-ben.vercel.app/api/test should succeed
 
@@ -28,11 +31,14 @@ The `serverless` function for each `API` endpoint should be accessible via a lin
 
 ### [api/test-rsa-oaep]
 - A `GET` request or direct access to `https://scarletti-ben.vercel.app/api/test-rsa-oaep?encrypt=test` should succeed and encrypt text to `response.data.text`
-
 - A `GET` request or direct access to `https://scarletti-ben.vercel.app/api/test-rsa-oaep?decrypt=V%2Bt0hOXZvfeO51ca2UopBVuv5j3Hjz1JeTjXhIlEa2UManXn5JbUbGfyWfbQsI0ymvNe%2BD7kgTkiHFDHQUgrivKjUknzuQel8Wmm%2BM5hc7yfzqWDDrjJwFN3xr%2BtFnD31bxaaK%2Fqw6z%2FjZlAVy4bFIkKu%2BlmQyABoGQStNOLyC%2FHGYIPptm6cvlT%2BAU4vY4c8psr0FcTwweQTg88YsM9hFBo7UXDyvQK4ugD5RDes%2FL%2BennOMEmOI9SosA7KZz825%2FJX5zzpkf2c8fNw5JXetn7HSfvVozYrb9akVPodk81XSTsNc1gWuIsDmen5JtIqZhLso8aP9yHMItoOeZahAw%3D%3D` should succeed and decrypt text to `response.data.text`
+- A `GET` request or direct access to `https://scarletti-ben.vercel.app/api/test-rsa-oaep?decrypt=test` should fail as the text is not `URI`-safe `Base64`-encoded string encrypted via `RSA-OAEP`
 
-> [!NOTE]
-> Sometimes clicking a link can affect the characters in the URL slightly, consider copy and pasting the URL if you encounter issues
+> [!Caution]
+> Remember that `GET` requests have security issues as text needs to be passed as query parameters within the `URL` itself. This endpoint should not be used for sensitive data under any circumstances
+
+> [!TIP]
+> Ideally a `POST` request with `HTTPS` would be used, and this would also eliminate the need for the `decodeURIComponent` and `encodeURIComponent` calls as `POST` does not need to adhere to the `URL` character set.
 
 ## Adding a New API Endpoint
 It is incredibly easy to add a new `serverless` function / `API` endpoint to `Vercel`. To do so, create a new `.js` file in the `api/` directory and write a function in the format `export default function handler(request, response)`. Once completed, push the change to the `main` branch. `Vercel` will start a `build` and `deploy` process, with the new endpoint accessible at `https://app-name.vercel.app/api/endpoint-name`
@@ -81,6 +87,9 @@ As mentioned above, this `Vercel` project is linked to a `GitHub` repository, an
   - Select the specific repositories you want `Vercel` to have access to
 - Once linked you can deploy your `Vercel` site from a repository, and any pushes to the `main` branch of the repository will be reflected in your `Vercel` site
 - To add a serverless function, simply add the `/api` directory to your repository with endpoints being `JavaScript` files, eg. `endpoint-name.js` would be accessible via `https://app-name.vercel.app/api/endpoint-name`, see [adding a new API endpoint](#adding-a-new-api-endpoint)
+
+# Miscellaneous
+- By default, all requests via `HTTPS` are encrypted, and requests without `HTTPS` would be visible in plain text on your network. This does not mean that `GET` requests via `HTTP` are entirely secure, as the query parameters may be saved in your browser history or the server logs of the server you connect to.
 
 # Project Metadata
 ```yaml
