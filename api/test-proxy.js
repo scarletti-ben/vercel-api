@@ -1,3 +1,83 @@
+// < ======================================================
+// < Internal Proxy Fetch Function
+// < ======================================================
+
+/**
+ * Make a safe fetch request to an external URL
+ * - Returns an object for use as API response
+ * @async 
+ * @param {string} url - The target URL to fetch from
+ * @returns {Promise<object>}
+ */
+async function proxyFetch(url) {
+
+    try {
+
+        const response = await fetch(url);
+        if (!response.ok) {
+            return {
+                ok: false,
+                status: response.status,
+                data: null,
+                info: null,
+                error: {
+                    code: response.status,
+                    message: response.statusText,
+                    details: ''
+                },
+                timestamp: new Date().toISOString()
+            };
+        }
+
+        const contentType = response.headers.get('content-type') || '';
+        if (contentType.includes('application/json')) {
+            return {
+                ok: true,
+                status: response.status,
+                data: await response.json(),
+                info: {
+                    code: response.status,
+                    message: response.statusText,
+                    details: `Content type: ${contentType}`
+                },
+                error: null,
+                timestamp: new Date().toISOString()
+            }
+        } else {
+            return {
+                ok: true,
+                status: response.status,
+                data: {
+                    text: await response.text()
+                },
+                info: {
+                    code: response.status,
+                    message: response.statusText,
+                    details: `Content type: ${contentType}`
+                },
+                error: null,
+                timestamp: new Date().toISOString()
+            }
+        }
+
+    } catch (error) {
+        return {
+            ok: false,
+            status: 500,
+            data: null,
+            info: null,
+            error: {
+                code: 500,
+                name: error.name,
+                message: error.message,
+                details: 'Unexpected error in proxyFetch'
+            },
+            timestamp: new Date().toISOString()
+        }
+    }
+
+}
+
 // > ======================================================
 // > Exported Handler for the `test-proxy` Endpoint
 // > ======================================================
@@ -10,7 +90,7 @@
  * @param {Response} response - Next.js response object
  * @returns {void}
  */
-export default function handler(request, response) {
+export default async function handler(request, response) {
 
     // Allowed methods used for CORS and "Allow" header
     const allowedMethods = 'GET, OPTIONS';
@@ -32,30 +112,25 @@ export default function handler(request, response) {
     // Handle a GET request
     if (request.method === 'GET') {
 
-        // Success response if 'url' parameter found
+        // Make a proxyFetch request if `url` parameter found
         if (request.query.url) {
-            return response.status(200).json({
-                ok: true,
-                data: {
-                    code: 200,
-                    message: "GET request received",
-                    details: `url: ${request.query.url}`,
-                    timestamp: new Date().toISOString()
-                },
-                error: null,
-            });
+            const fetchResponse = await proxyFetch(request.query.url);
+            const fetchStatus = fetchResponse.status;
+            return response.status(fetchStatus).json(fetchResponse);
         }
 
         // Error response if 'url' parameter missing
         return response.status(400).json({
             ok: false,
+            status: 400,
             data: null,
+            info: null,
             error: {
                 code: 400,
                 message: "Missing required parameter",
                 details: "Missing 'url' parameter: ?url=https://www.example.com",
-                timestamp: new Date().toISOString()
-            }
+            },
+            timestamp: new Date().toISOString()
         });
 
     }
@@ -68,13 +143,15 @@ export default function handler(request, response) {
     response.setHeader('Allow', allowedMethods);
     return response.status(405).json({
         ok: false,
+        status: 405,
         data: null,
+        info: null,
         error: {
             code: 405,
             message: "Method not allowed",
             details: `${request.method} method not allowed`,
-            timestamp: new Date().toISOString()
-        }
+        },
+        timestamp: new Date().toISOString()
     });
 
 }
