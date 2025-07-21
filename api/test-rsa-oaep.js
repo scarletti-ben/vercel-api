@@ -220,7 +220,7 @@ async function handleGet(request, response) {
         }
 
         // ~ Decrypt the provided text
-        const encodedBase64 = request.query.encrypt;
+        const encodedBase64 = request.query.decrypt;
         const encryptedBase64 = decodeURIComponent(encodedBase64);
         const privateKey = await importKey(process.env.PRIVATE_KEY, "private");
         const originalText = await rsaDecrypt(encryptedBase64, privateKey);
