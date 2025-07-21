@@ -6,6 +6,7 @@
  * API handler for the `public-key` endpoint
  * - Runs in a Node.js environment
  * - Request and Response types from Next.js
+ * 
  * @param {Request} request - Next.js request object
  * @param {Response} response - Next.js response object
  * @returns {void}

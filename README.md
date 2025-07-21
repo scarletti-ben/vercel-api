@@ -35,6 +35,7 @@ An incredibly simple example of a `handler` function can be found below. There i
  * API handler for the `example` endpoint
  * - Runs in a Node.js environment
  * - Request and Response types from Next.js
+ * 
  * @param {Request} request - Next.js request object
  * @param {Response} response - Next.js response object
  * @returns {void}
