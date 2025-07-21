@@ -88,7 +88,7 @@ async function importKey(base64, type) {
 }
 
 /**
- * Encrypt text usingpublic key
+ * Encrypt text using public key
  * 
  * @async
  * @param {string} text - Plain text to encrypt
@@ -220,7 +220,7 @@ async function handleGet(request, response) {
         }
 
         // ~ Decrypt the provided text
-        const encodedBase64 = request.query.text;
+        const encodedBase64 = request.query.encrypt;
         const encryptedBase64 = decodeURIComponent(encodedBase64);
         const privateKey = await importKey(process.env.PRIVATE_KEY, "private");
         const originalText = await rsaDecrypt(encryptedBase64, privateKey);
