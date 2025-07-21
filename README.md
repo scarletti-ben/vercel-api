@@ -23,6 +23,9 @@ The `serverless` function for each `API` endpoint should be accessible via a lin
 - A `GET` request or direct access to https://scarletti-ben.vercel.app/api/test-proxy?url=https://www.example.com should fail as the content type returned is `text/html`
 - A `GET` request or direct access to https://scarletti-ben.vercel.app/api/test-proxy?url=https://www.reddit.com should fail as `Reddit` does not honour the request
 
+### [api/public-key](https://scarletti-ben.vercel.app/api/public-key)
+- A `GET` request or direct access to https://scarletti-ben.vercel.app/api/public-key should succeed with `PUBLIC_KEY` as a `Base64` encoded string in an object of the data field `response.data.PUBLIC_KEY`
+
 ## Adding a New API Endpoint
 It is incredibly easy to add a new `serverless` function / `API` endpoint to `Vercel`. To do so, create a new `.js` file in the `api/` directory and write a function in the format `export default function handler(request, response)`. Once completed, push the change to the `main` branch. `Vercel` will start a `build` and `deploy` process, with the new endpoint accessible at `https://app-name.vercel.app/api/endpoint-name`
 
@@ -54,6 +57,11 @@ export default function handler(request, response) {
     }
 }
 ```
+
+# Vercel Environment Variables
+You can add environment variables to your `Vercel` projects via `Projet Settings/Environment Variables`, these are accessible in your `API` endpoints via `process.env.VARIABLE_NAME`. The contents of these variables are only exposed if you manually return them in a response, otherwise you can use them within your serverless functions however you wish.
+
+An example usage is in `api/public-key` which exposes `process.env.PUBLIC_KEY` openly for any `GET` request to the endpoint. See [api/public-key](#apipublic-key)
 
 # Initial Vercel Setup
 As mentioned above, this `Vercel` project is linked to a `GitHub` repository, and listens for pushes to the `main` branch. Setting this up was incredibly simple, and the steps are listed below
