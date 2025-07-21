@@ -40,7 +40,7 @@
   > Section II: Font Families
   > ==================================================== */
 
-  --font-family-mono: 'Courier New', Courier, monospace;
+  --font-family-mono:  monospace, 'Courier New', Courier;
   --font-family-sans: Inter, 'Segoe UI', sans-serif;
   --font-family-roboto: Roboto, Arial, sans-serif;
   --font-family-montserrat: Montserrat, 'Trebuchet MS', sans-serif;
@@ -69,10 +69,6 @@
   --font-size: 16px;
   --font-weight: 400;
   --font-family: var(--font-family-mono);
-
-  /* ~ ====================================================
-  ~ Section IV: Project Variables
-  ~ ==================================================== */
 
 }
 
