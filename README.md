@@ -27,13 +27,12 @@ The `serverless` function for each `API` endpoint should be accessible via a lin
 - A `GET` request or direct access to https://scarletti-ben.vercel.app/api/public-key should succeed with `PUBLIC_KEY` as a `Base64` encoded string in an object of the data field `response.data.PUBLIC_KEY`
 
 ### [api/test-rsa-oaep]
-- A `GET` request or direct access to [here](https://scarletti-ben.vercel.app/api/test-rsa-oaep?text=MJvhSYrombxBJpIDysyCxWfj%2F7hg%2FcXddf2GMG6hO9I2PlqtSlV5MTOvm%2B%2FqkBiFYD%2BOdCQFtp9kLf9ywGO1wz5D2u7n3ChQW83IsOSt7Z1tv6lVjo92y6TemJzDoSJIWUArg9u0GWQvjL46%2BNp%2B8j4vx%2Fw%2FV4u3PIJ9d1WoaAK%2FGUdo1vasavXLhwVVvIEQEBQi9KrwnC1L0LcBLYA7xa4mbKVOQ5WkE%2B%2Bv1AyL%2FYRGo767MeqHzJeB2m9JNTIk%2BRT7dkk7bsakxa0rATq1kXEoRD7RRBf3%2B7kqW61EKakq3ephuMYasWw93RIfzwBtnKV5EEgKO8%2BxFOSEE%2B9mRQ%3D%3D) should succeed with decrypted text in `response.data.decryptedText`
+- A `GET` request or direct access to `https://scarletti-ben.vercel.app/api/test-rsa-oaep?encrypt=test` should succeed and encrypt text to `response.data.text`
 
-[here](https://scarletti-ben.vercel.app/api/test-rsa-oaep?encrypt=test)
+- A `GET` request or direct access to `https://scarletti-ben.vercel.app/api/test-rsa-oaep?decrypt=V%2Bt0hOXZvfeO51ca2UopBVuv5j3Hjz1JeTjXhIlEa2UManXn5JbUbGfyWfbQsI0ymvNe%2BD7kgTkiHFDHQUgrivKjUknzuQel8Wmm%2BM5hc7yfzqWDDrjJwFN3xr%2BtFnD31bxaaK%2Fqw6z%2FjZlAVy4bFIkKu%2BlmQyABoGQStNOLyC%2FHGYIPptm6cvlT%2BAU4vY4c8psr0FcTwweQTg88YsM9hFBo7UXDyvQK4ugD5RDes%2FL%2BennOMEmOI9SosA7KZz825%2FJX5zzpkf2c8fNw5JXetn7HSfvVozYrb9akVPodk81XSTsNc1gWuIsDmen5JtIqZhLso8aP9yHMItoOeZahAw%3D%3D` should succeed and decrypt text to `response.data.text`
 
-[here](https://scarletti-ben.vercel.app/api/test-rsa-oaep?decrypt=LdGKLk%2FY%2FMM8t0llQzLZqamngzvAewxlYrU1f0bWkuRgeu0kEkQCrAkXsRyvXK2Ngkk64B2ADKedXZItpqsdqA7Af5nwLALY3wW2u%2Fuoh%2Fi1qFKVG8Nw0kskRc9TMHuLUgEOvLDmiMicMc8Ahl4SgC83z%2F1YU4nuu%2BS7n9xDPGjajDEozq%2BWyG708Iq91ie7rhHJCKgixwPCIhllkQ4%2FmI4Zx6V%2Buym0bgpthkTew5HLn9UWjYmDm6wrF9GAOxpvylAqCbvw7%2F7Y%2Fo%2FddtUEmcC1fqCcWxNdHZ9UF%2FwaQ0OLcSxIpi158JN1DpF5kx%2BGivYzEuK02siB%2BfEh4VvZwQ%3D%3D)
-
-[here](https://scarletti-ben.vercel.app/api/test-rsa-oaep?decrypt=MJvhSYrombxBJpIDysyCxWfj%2F7hg%2FcXddf2GMG6hO9I2PlqtSlV5MTOvm%2B%2FqkBiFYD%2BOdCQFtp9kLf9ywGO1wz5D2u7n3ChQW83IsOSt7Z1tv6lVjo92y6TemJzDoSJIWUArg9u0GWQvjL46%2BNp%2B8j4vx%2Fw%2FV4u3PIJ9d1WoaAK%2FGUdo1vasavXLhwVVvIEQEBQi9KrwnC1L0LcBLYA7xa4mbKVOQ5WkE%2B%2Bv1AyL%2FYRGo767MeqHzJeB2m9JNTIk%2BRT7dkk7bsakxa0rATq1kXEoRD7RRBf3%2B7kqW61EKakq3ephuMYasWw93RIfzwBtnKV5EEgKO8%2BxFOSEE%2B9mRQ%3D%3D)
+> [!NOTE]
+> Sometimes clicking a link can affect the characters in the URL slightly, consider copy and pasting the URL if you encounter issues
 
 ## Adding a New API Endpoint
 It is incredibly easy to add a new `serverless` function / `API` endpoint to `Vercel`. To do so, create a new `.js` file in the `api/` directory and write a function in the format `export default function handler(request, response)`. Once completed, push the change to the `main` branch. `Vercel` will start a `build` and `deploy` process, with the new endpoint accessible at `https://app-name.vercel.app/api/endpoint-name`
