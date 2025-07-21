@@ -38,7 +38,8 @@ export default function handler(request, response) {
             ok: true,
             status: 200,
             data: {
-                PUBLIC_KEY: process.env.PUBLIC_KEY
+                PUBLIC_KEY: process.env.PUBLIC_KEY,
+                message: `Base64-encoded Ed25519 key`
             },
             info: {
                 code: 200,
