@@ -27,7 +27,7 @@ async function proxyFetch(url) {
                 error: {
                     code: response.status,
                     message: response.statusText,
-                    details: `proxyFetch from ${url} was not successful`
+                    details: `proxyFetch to ${url} was not successful`
                 },
                 timestamp: new Date().toISOString()
             };
