@@ -4,8 +4,10 @@
 
 /**
  * API handler for the `test` endpoint
- * @param {Request} request - The request object
- * @param {Response} response - The response object
+ * - Runs in a Node.js environment
+ * - Request and Response will actually be Next.js types
+ * @param {Request} request - Next.js request object
+ * @param {Response} response - Next.js response object
  * @returns {void}
  */
 export default function handler(request, response) {
@@ -42,7 +44,7 @@ export default function handler(request, response) {
     
     // ! Note: This will not be reached when cross-origin
     // - The OPTIONS preflight check should block it
-    
+
     // Handle all other requests with not implemented error
     response.setHeader('Allow', allowedMethods);
     response.status(501).json({
