@@ -39,7 +39,7 @@ export default function handler(request, response) {
             status: 200,
             data: {
                 PUBLIC_KEY: process.env.PUBLIC_KEY,
-                message: `Base64-encoded Ed25519 key`
+                message: `Base64-encoded RSA-OAEP key`
             },
             info: {
                 code: 200,
