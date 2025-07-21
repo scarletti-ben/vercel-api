@@ -29,7 +29,8 @@ The `serverless` function for each `API` endpoint should be accessible via a lin
 ### [api/public-key](https://scarletti-ben.vercel.app/api/public-key)
 - A `GET` request or direct access to https://scarletti-ben.vercel.app/api/public-key should succeed with `PUBLIC_KEY` as a `Base64` encoded string in an object of the data field `response.data.PUBLIC_KEY`
 
-### [api/test-rsa-oaep]
+### [api/test-rsa-oaep](https://scarletti-ben.vercel.app/api/test-rsa-oaep)
+- A `GET` request or direct access to https://scarletti-ben.vercel.app/api/test-rsa-oaep should fail as neither `?encrypt=` nor `?decrypt=` parameter are found
 - A `GET` request or direct access to `https://scarletti-ben.vercel.app/api/test-rsa-oaep?encrypt=test` should succeed and encrypt text to `response.data.text`
 - A `GET` request or direct access to `https://scarletti-ben.vercel.app/api/test-rsa-oaep?decrypt=V%2Bt0hOXZvfeO51ca2UopBVuv5j3Hjz1JeTjXhIlEa2UManXn5JbUbGfyWfbQsI0ymvNe%2BD7kgTkiHFDHQUgrivKjUknzuQel8Wmm%2BM5hc7yfzqWDDrjJwFN3xr%2BtFnD31bxaaK%2Fqw6z%2FjZlAVy4bFIkKu%2BlmQyABoGQStNOLyC%2FHGYIPptm6cvlT%2BAU4vY4c8psr0FcTwweQTg88YsM9hFBo7UXDyvQK4ugD5RDes%2FL%2BennOMEmOI9SosA7KZz825%2FJX5zzpkf2c8fNw5JXetn7HSfvVozYrb9akVPodk81XSTsNc1gWuIsDmen5JtIqZhLso8aP9yHMItoOeZahAw%3D%3D` should succeed and decrypt text to `response.data.text`
 - A `GET` request or direct access to `https://scarletti-ben.vercel.app/api/test-rsa-oaep?decrypt=test` should fail as the text is not `URI`-safe `Base64`-encoded string encrypted via `RSA-OAEP`
