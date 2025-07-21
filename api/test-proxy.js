@@ -3,78 +3,78 @@
 // > ======================================================
 
 /**
- * API handler for the `test-proxy` endpoint
- * @param {Request} request - The request object
- * @param {Response} response - The response object
+ * API handler for the `test-parameters` endpoint
+ * - Runs in a Node.js environment
+ * - Request and Response will actually be Next.js types
+ * @param {Request} request - Next.js request object
+ * @param {Response} response - Next.js response object
  * @returns {void}
  */
-export default async function handler(request, response) {
+export default function handler(request, response) {
 
-    // Set CORS headers
+    // Allowed methods used for CORS and "Allow" header
+    const allowedMethods = 'GET, OPTIONS';
+
+    // Set CORS headers to allow cross-origin requests
     response.setHeader('Access-Control-Allow-Origin', '*');
-    response.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
+    response.setHeader('Access-Control-Allow-Methods', allowedMethods);
     response.setHeader('Access-Control-Allow-Headers', 'Content-Type');
 
-    // Handle preflight (OPTIONS request)
+    // ! Note: Cross-origin requests often send OPTIONS preflight
+    // - Browser checks if method in allowedMethods
+    // - Usually the main request is only sent if OPTIONS allows it
+
+    // Handle an OPTIONS request (CORS preflight request)
     if (request.method === 'OPTIONS') {
-        response.status(204).end();
-        return;
+        return response.status(204).end();
     }
 
-    // Handle GET request
-    else if (request.method === 'GET') {
-        try {
-            const targetURL = request.query.url;
-            if (!targetURL) {
-                response.status(400).json({
-                    error: 'Missing url parameter in fetch URL',
-                    details: 'eg. fetch(api/test-proxy?url=www.example.com)'
-                });
-                return;
-            }
-            // const targetResponse = await fetch(targetURL, {
-            //     headers: { 'User-Agent': 'Mozilla/5.0' }
-            // });
-            const targetResponse = await fetch('https://api.reddit.com/r/cats.json?limit=1', {
-                headers: { 'User-Agent': 'BenTestProxy/1.0.1 (notspam95@gmail.com)' }
-            });
-            const targetStatus = targetResponse.status;
-            const contentType = targetResponse.headers.get('content-type') || '';
-            if (contentType.includes('application/json')) {
-                const data = await targetResponse.json();
-                response.status(200).json({
-                    message: `GET request proxied (JSON)`,
-                    proxyStatus: targetStatus,
-                    data,
-                    ok: true
-                });
-            } else {
-                const text = await targetResponse.text();
-                response.status(200).json({
-                    message: `GET request proxied (text)`,
-                    proxyStatus: targetStatus,
-                    data: { text },
-                    ok: true
-                });
-            }
-            return;
-        } catch (error) {
-            response.status(500).json({
-                error: 'Fetch failed',
-                details: error.message,
-                ok: false
+    // Handle a GET request
+    if (request.method === 'GET') {
+
+        // Success response if 'url' parameter found
+        if (request.query.url) {
+            return response.status(200).json({
+                ok: true,
+                data: {
+                    code: 200,
+                    message: "GET request received",
+                    details: `url: ${response.query.url}`,
+                    timestamp: new Date().toISOString()
+                },
+                error: null,
             });
         }
+
+        // Error response if 'url' parameter missing
+        return response.status(400).json({
+            ok: false,
+            data: null,
+            error: {
+                code: 400,
+                message: "Missing required parameter",
+                details: "Missing 'url' parameter: ?url=https://www.example.com",
+                timestamp: new Date().toISOString()
+            }
+        });
+
     }
 
-    // Handle other requests
-    else {
-        response.status(405).json({
-            error: 'Request method not allowed',
-            details: `${request.method} not allowed`,
-            ok: false
-        });
-        return;
-    }
+    // ! Note: This should not be reached when cross-origin
+    // - The OPTIONS preflight check should block it
+    // - Direct requests may avoid OPTIONS and reach it
+
+    // Handle all other requests with not allowed error
+    response.setHeader('Allow', allowedMethods);
+    return response.status(405).json({
+        ok: false,
+        data: null,
+        error: {
+            code: 405,
+            message: "Method not allowed",
+            details: `${request.method} method not allowed`,
+            timestamp: new Date().toISOString()
+        }
+    });
 
 }
