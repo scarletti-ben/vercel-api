@@ -143,8 +143,7 @@ export default async function handler(request, response) {
     if (request.method === 'GET') {
 
         // ~ Check search parameters
-        const params = new URL(request.url).searchParams;
-        const parameterCount = [...params.keys()].length;
+        const parameterCount = Object.keys(request.query).length;
 
         // ~ Error response if multiple parameters found
         if (parameterCount > 1) {
