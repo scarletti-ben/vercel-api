@@ -142,6 +142,26 @@ export default async function handler(request, response) {
     // ~ Handle a GET request
     if (request.method === 'GET') {
 
+        // ~ Check search parameters
+        const params = new URL(request.url).searchParams;
+        const parameterCount = [...params.keys()].length;
+
+        // ~ Error response if multiple parameters found
+        if (parameterCount > 1) {
+            return response.status(400).json({
+                ok: false,
+                status: 400,
+                data: null,
+                info: null,
+                error: {
+                    code: 400,
+                    message: "Multiple parameters found",
+                    details: "Multiple parameters found, try encoding the text after ?url="
+                },
+                timestamp: new Date().toISOString()
+            });
+        }
+
         // ~ Make a proxyFetch request if `url` parameter found
         if (request.query.url) {
             const fetchResponse = await proxyFetch(request.query.url);
@@ -159,7 +179,7 @@ export default async function handler(request, response) {
             error: {
                 code: 400,
                 message: "Missing required parameter",
-                details: "Missing 'url' parameter: ?url=https://www.example.com",
+                details: "Missing 'url' parameter: ?url=https://www.example.com"
             },
             timestamp: new Date().toISOString()
         });
@@ -183,7 +203,7 @@ export default async function handler(request, response) {
         error: {
             code: 405,
             message: "Method not allowed",
-            details: `${request.method} method not allowed`,
+            details: `${request.method} method not allowed`
         },
         timestamp: new Date().toISOString()
     });

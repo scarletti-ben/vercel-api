@@ -89,6 +89,8 @@ As mentioned above, this `Vercel` project is linked to a `GitHub` repository, an
 - By default, all requests via `HTTPS` are encrypted, and requests without `HTTPS` would be visible in plain text on your network. This does not mean that `GET` requests via `HTTP` are entirely secure, as the query parameters may be saved in your browser history or the server logs of the server you connect to
 - Sometimes clicking a link can affect the characters in the URL slightly, consider copy and pasting the URL if you encounter issues
 
+- There is or was an issue with the `url` parameter for `test-proxy` where it ignored the query parameters of the `url` being passed. For example `https://scarletti-ben.vercel.app/api/test-proxy?url=https://committees-api.parliament.uk/api/Events/?GroupChildEventsWithParent=true&StartDateFrom=2025-11-18&StartDateTo=2025-12-20&ExcludeCancelledEvents=true&SortAscending=true&IncludeEventAttendees=true` doesn't see all the arguments, and sees `&` as a separator for the arguments. A fix is to encode the `url` parameter as seen here `https://scarletti-ben.vercel.app/api/test-proxy?url=https%3A%2F%2Fcommittees-api.parliament.uk%2Fapi%2FEvents%2F%3FGroupChildEventsWithParent%3Dtrue%26StartDateFrom%3D2025-11-18%26StartDateTo%3D2025-12-20%26ExcludeCancelledEvents%3Dtrue%26SortAscending%3Dtrue%26IncludeEventAttendees%3Dtrue`
+
 # Project Metadata
 ```yaml
 ---
