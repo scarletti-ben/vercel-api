@@ -14,7 +14,7 @@ async function proxyFetch(url) {
 
     try {
 
-        // ~ Make a request to the given url
+        // ~ Make a request to the given URL
         const response = await fetch(url);
 
         if (!response.ok) {
@@ -155,21 +155,21 @@ export default async function handler(request, response) {
                 error: {
                     code: 400,
                     message: "Multiple parameters found",
-                    details: "Multiple parameters found, try encoding the text after ?url="
+                    details: "Multiple parameters found, try using https://www.urlencoder.org to encode the text after ?link="
                 },
                 timestamp: new Date().toISOString()
             });
         }
 
-        // ~ Make a proxyFetch request if `url` parameter found
-        if (request.query.url) {
-            const fetchResponse = await proxyFetch(request.query.url);
+        // ~ Make a proxyFetch request if `link` parameter found
+        if (request.query.link) {
+            const fetchResponse = await proxyFetch(request.query.link);
             const fetchStatus = fetchResponse.status;
             // ~ Success or error response dependent on proxyFetch
             return response.status(fetchStatus).json(fetchResponse);
         }
 
-        // ~ Error response if 'url' parameter missing
+        // ~ Error response if 'link' parameter missing
         return response.status(400).json({
             ok: false,
             status: 400,
@@ -178,7 +178,7 @@ export default async function handler(request, response) {
             error: {
                 code: 400,
                 message: "Missing required parameter",
-                details: "Missing 'url' parameter: ?url=https://www.example.com"
+                details: "Missing 'link' parameter: ?link=https://www.example.com"
             },
             timestamp: new Date().toISOString()
         });
