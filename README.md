@@ -10,7 +10,7 @@ The main site can be found [here](https://scarletti-ben.vercel.app), it is curre
 The `serverless` function for each `API` endpoint should be accessible via a link in the format `https://app-name.vercel.app/api/endpoint-name`
 
 > [!TIP]
-> You can test `API` endpoints using the `API` tester [ReqBin](https://reqbin.com/)
+> You can test `API` endpoints using the `API` request tester [ReqBin](https://reqbin.com/)
 
 ## Current API Endpoints
 
@@ -61,7 +61,7 @@ export default function handler(request, response) {
             info: {
                 code: 200,
                 message: "GET request received",
-                details: `GET requests to this endpoint are allowed`,
+                details: `GET requests to this endpoint are allowed`
             },
             error: null,
             timestamp: new Date().toISOString()

@@ -14,8 +14,8 @@ async function proxyFetch(url) {
 
     try {
 
-        // ~ Make a request to the given url
-        const response = await fetch(url);
+        // ~ Make a request to the given url, without caching
+        const response = await fetch(url, { cache: 'no-store' });
 
         if (!response.ok) {
             // ~ Error object if the request fails
@@ -126,6 +126,9 @@ export default async function handler(request, response) {
     response.setHeader('Access-Control-Allow-Origin', '*');
     response.setHeader('Access-Control-Allow-Methods', allowedMethods);
     response.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+
+    // ~ Set CORS headers to disable caching
+    response.setHeader('Cache-Control', 'no-store, max-age=0');
 
     /**
      * > Note 
